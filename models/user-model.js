@@ -1,11 +1,11 @@
 const mongoose=require('mongoose');
 
  
-const userSchema=mongoose.schema({
+const userSchema=mongoose.Schema({
     fullname:String,
     password:String,
    email:String,
-   isadmin:Boolean,
+   
    contact:Number,
    cart:{
     typeof:Array,
