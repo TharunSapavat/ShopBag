@@ -68,10 +68,15 @@ return res.send("Invalid credentials");
      if(result){
        let token= generateToken(user);
        res.cookie("token",token);
-       //
+     res.redirect('/shop');
      }
      else{
         res.status(400).send("invalid credentials");
      }
  })
 };
+
+module.exports.logout=async(req,res)=>{
+   res.cookie("token","");
+   res.redirect('/');
+}
