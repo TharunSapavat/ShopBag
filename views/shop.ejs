@@ -1,11 +1,12 @@
 <%- include('./partials/header') %>
+ 
 <div class="w-full min-h-screen flex items-start px-20 py-20 bg-gray-50">
     <!-- Sidebar -->
     <aside class="w-1/6 flex flex-col items-start pr-8 ml-4 mt-8 self-start">
         <div class="flex items-center gap-2 mb-8">
             <h3 class="font-semibold">Sort by</h3>
             <form action="/shop">
-                <select class="border px-2 py-1 rounded" name="sortby">
+                <select class="border px-2 py-1 rounded bg-white text-gray-700 focus:ring-2 focus:ring-blue-300 focus:border-blue-300" name="sortby">
                     <option value="popular">Popular</option>
                     <option value="newest">Newest</option>
                 </select>
@@ -27,21 +28,30 @@
     <!-- Product Grid -->
     <main class="w-3/4 flex flex-col gap-5">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 overflow-y-auto">
-            <% if (products.length === 0) { %>
+            <% if (!products || products.length === 0) { %>
                 <div class="col-span-full text-center text-gray-500">No products found.</div>
             <% } %>
-            <% products.forEach(function(product){ %>
+            <% products.forEach(function(product){ 
+                if (!product) return; // skip if product is null/undefined
+            %>
                 <div class="w-full bg-white rounded-lg shadow hover:shadow-lg transition">
-                    <div class="w-full h-52 flex items-center justify-center rounded-t-lg" style="background:<%= (product && product.bgcolor) ? product.bgcolor : '#f3f4f6' %>;">
-                        <img class="h-44 object-contain"
-                             src="data:image/jpeg;base64,<%= (product.image ? product.image.toString('base64') : '') %>"
-                             alt="">
+                    <div class="w-full h-52 flex items-center justify-center rounded-t-lg" 
+                         style="background: <%= product.bgcolor || '#f3f4f6' %>;">
+                        <% if (product.image) { %>
+                            <img class="h-44 object-contain"
+                                 src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                 alt="">
+                        <% } else { %>
+                            <div class="h-44 w-44 flex items-center justify-center bg-gray-200 text-gray-400 text-sm rounded">
+                                No Image
+                            </div>
+                        <% } %>
                     </div>
                     <div class="flex justify-between items-center px-4 py-4 rounded-b-lg"
                          style="background:<%= product.panelcolor || '#fff' %>; color:<%= product.textcolor || '#222' %>;">
                         <div>
-                            <h3 class="font-semibold text-lg"><%= product.name %></h3>
-                            <h4 class="text-base">₹ <%= product.price %></h4>
+                            <h3 class="font-semibold text-lg"><%= product.name || 'No Name' %></h3>
+                            <h4 class="text-base">₹ <%= typeof product.price === 'number' ? product.price : 0 %></h4>
                         </div>
                         <a class="w-8 h-8 flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-100" href="#">
                             <i class="ri-add-line"></i>

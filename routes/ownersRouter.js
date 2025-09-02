@@ -15,7 +15,10 @@ email,
 res.status(201).send("Owner created");
 });
   }
-
+router.get('/admin',(req,res)=>{
+let success = req.flash("success");
+res.render('createproducts', { success });
+})
 
 router.get('/',(req,res)=>{
     res.send("hey");
