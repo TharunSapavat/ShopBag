@@ -71,7 +71,8 @@ return res.send("Invalid credentials");
      res.redirect('/shop');
      }
      else{
-        res.status(400).send("invalid credentials");
+        req.flash("error","Invalid crendentials");
+        res.redirect('/');
      }
  })
 };

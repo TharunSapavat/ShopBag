@@ -1,17 +1,11 @@
 <%- include('./partials/header') %>
 
     <% if(typeof error !== 'undefined' && error.length > 0){ %>
-        <div id="flash-error" class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500">
+        <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500">
             <span class="inline-block mt-1 mb-1 text-white">
                 <%= error %>
             </span>
         </div>
-        <script>
-            setTimeout(function() {
-                var el = document.getElementById('flash-error');
-                if (el) el.style.display = 'none';
-            }, 1000);
-        </script>
     <% } %>
     <div class="w-full h-screen flex px-20">
         <div class="w-1/2 flex items-center justify-center h-screen">

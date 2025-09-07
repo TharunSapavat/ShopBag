@@ -2,20 +2,28 @@ const mongoose=require('mongoose');
 
  
 const userSchema=mongoose.Schema({
-    fullname:String,
-    password:String,
-   email:String,
-   
-   contact:Number,
-   cart:{
-    typeof:Array,
-    default:[]
-   },
-   orders:{
-    typeof:Array,
-    default:[]
-   },
-picture:String,
+    fullname: String,
+    password: String,
+    email: String,
+    contact: Number,
+    cart: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "product",
+    }],
+    orders: {
+        type: Array,
+        default: []
+    },
+    picture: {
+        type: String,
+        default: 'default-profile.png' // Default profile image
+    },
+    address: {
+        street: String,
+        city: String,
+        state: String,
+        pincode: String
+    }
 })
 
 module.exports=mongoose.model("user",userSchema);
