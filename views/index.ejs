@@ -6,6 +6,12 @@
                 <%= error %>
             </span>
         </div>
+           <script>
+        setTimeout(function() {
+            var el = document.getElementById('flash-success');
+            if (el) el.style.display = 'none';
+        }, 1000);
+    </script>
     <% } %>
     <div class="w-full h-screen flex px-20">
         <div class="w-1/2 flex items-center justify-center h-screen">
