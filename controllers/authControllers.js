@@ -80,4 +80,6 @@ return res.send("Invalid credentials");
 module.exports.logout=async(req,res)=>{
    res.cookie("token","");
    res.redirect('/');
-}
+};
+
+ 

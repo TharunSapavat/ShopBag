@@ -14,10 +14,7 @@ const userSchema=mongoose.Schema({
         type: Array,
         default: []
     },
-    picture: {
-        type: String,
-        default: 'default-profile.png' // Default profile image
-    },
+  
     address: {
         street: String,
         city: String,
