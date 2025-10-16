@@ -21,20 +21,25 @@ module.exports.registerUser=async function(req,res){
         // Validate user input
         const { error } = validateUser(req.body);
         if (error) {
-            return res.render('index', { error: error.details[0].message });
+            req.flash('error', error.details[0].message);
+            return res.redirect('/');
         }
 
         // Check if user exists
         const existingUser = await userModel.findOne({ email: req.body.email });
         if (existingUser) {
-            return res.render('index', { error: 'Email already registered' });
+            req.flash('error', 'Email already registered');
+            return res.redirect('/');
         }
 //destructure
           const { email, fullname, password } = req.body;
 //bcrypt
        bcrypt.genSalt(10,function(err,salt){
 bcrypt.hash(password,salt,async function(err,hash){
-     if(err) return res.send(err.message);
+     if(err) {
+         req.flash('error', 'Something went wrong');
+         return res.redirect('/');
+     }
      else {
          const user = await userModel.create({
             email,
@@ -43,9 +48,8 @@ bcrypt.hash(password,salt,async function(err,hash){
         });
      let token= generateToken(user);
       res.cookie("token",token);
-      res.send("user created")
-      
-        // res.redirect('/dashboard');
+      req.flash('success', 'Account created successfully!');
+      res.redirect('/shop');
      }
 });
        });
@@ -53,7 +57,8 @@ bcrypt.hash(password,salt,async function(err,hash){
         // Create new user
        
     } catch (err) {
-        res.render('index', { error: 'Something went wrong' });
+        req.flash('error', 'Something went wrong');
+        res.redirect('/');
     }
 
 };
@@ -62,16 +67,23 @@ module.exports.loginUser=async (req,res)=>{
 let{email,password}=req.body;
 let user=await userModel.findOne({email:email});
 if(!user){
-return res.send("Invalid credentials");
+    req.flash('error','Invalid user name or password');
+return  res.redirect('/');
 }
  bcrypt.compare(password,user.password,function(err,result){
      if(result){
        let token= generateToken(user);
        res.cookie("token",token);
-     res.redirect('/shop');
+       
+       // Role-based redirect
+       if(user.role === 'admin' || user.role === 'co-admin'){
+           res.redirect('/owners/admin');
+       } else {
+           res.redirect('/shop');
+       }
      }
      else{
-        req.flash("error","Invalid crendentials");
+        req.flash("error","Invalid credentials");
         res.redirect('/');
      }
  })

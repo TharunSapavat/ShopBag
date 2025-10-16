@@ -1,17 +1,33 @@
 <%- include('./partials/header') %>
-<% if (success && success.length > 0) { %>
-    <div id="flash-success" class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
+
+<% if (typeof messages !== 'undefined' && messages.success && messages.success.length > 0) { %>
+    <div id="flash-success" class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-green-500">
         <span class="inline-block mt-1 mb-1 text-white">
-            <%= success %>
+            <%= messages.success %>
         </span>
     </div>
     <script>
         setTimeout(function() {
             var el = document.getElementById('flash-success');
             if (el) el.style.display = 'none';
-        }, 1000);
+        }, 3000);
     </script>
 <% } %>
+
+<% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
+    <div id="flash-error" class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500">
+        <span class="inline-block mt-1 mb-1 text-white">
+            <%= messages.error %>
+        </span>
+    </div>
+    <script>
+        setTimeout(function() {
+            var el = document.getElementById('flash-error');
+            if (el) el.style.display = 'none';
+        }, 3000);
+    </script>
+<% } %>
+
 
  
 <div class="w-full min-h-screen flex items-start px-20 py-20 bg-gray-50">

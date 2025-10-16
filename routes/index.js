@@ -31,8 +31,8 @@ const upload = multer({
     }
 });
 router.get('/', (req, res) => {
-    let error = req.flash("error");
-    res.render("index", { error,loggedin:false });
+    // Don't read flash here - it's already in res.locals.messages from middleware
+    res.render("index", { loggedin:false });
 });
 
 router.get('/addtocart/:productId', isloggedin, async(req, res) => {
@@ -144,17 +144,21 @@ router.get('/cart', isloggedin, async (req, res) => {
 
 router.get('/shop', isloggedin, async (req, res) => {
     try {
+        // Block admin and co-admin from shopping
+        if (req.user.role === 'admin' || req.user.role === 'co-admin') {
+            req.flash('error', 'Admins cannot shop. This is a customer-only area.');
+            return res.redirect('/owners/admin');
+        }
+        
         const products = await productModel.find();
-        const success = req.flash('success');
+        // Flash messages are already in res.locals.messages from middleware
         res.render('shop', { 
             products,
-            success: success || '',
             isLoggedIn: true
         });
     } catch (err) {
         res.render('shop', { 
             products: [],
-            success: '',
             isLoggedIn: true
         });
     }
@@ -165,6 +169,12 @@ router.get('/logout',isloggedin,(req,res)=>{
 });
 
 router.get('/cart', isloggedin, async (req, res) => {
+   // Block admin and co-admin from accessing cart
+   if (req.user.role === 'admin' || req.user.role === 'co-admin') {
+       req.flash('error', 'Admins cannot access shopping cart.');
+       return res.redirect('/owners/admin');
+   }
+   
    let user = await userModel.findOne({email:req.user.email}).populate("cart");
    
    res.render("cart",{user});

@@ -6,6 +6,11 @@ const userSchema=mongoose.Schema({
     password: String,
     email: String,
     contact: Number,
+    role: {
+        type: String,
+        enum: ['user', 'co-admin', 'admin'],
+        default: 'user'
+    },
     cart: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "product",
